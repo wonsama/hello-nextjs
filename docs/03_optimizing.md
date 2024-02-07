@@ -9,8 +9,8 @@
 
 ## 글꼴 추가
 
-<img src="images/03_before.png" alt="image" style="width:auto;height:300px;">
-<img src="images/03_after.png" alt="image" style="width:auto;height:300px;">
+<img src="images/03_before.png" alt="image" style="width:auto;max-height:300px;">
+<img src="images/03_after.png" alt="image" style="width:auto;max-height:300px;">
 
 ```tsx
 // -=> /app/ui/fonts.ts

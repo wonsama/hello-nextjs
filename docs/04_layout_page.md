@@ -9,8 +9,8 @@
 
 ## 중첩 라우팅
 
-<img src="images/04_route_01.png" alt="image" style="width:auto;height:300px;">
-<img src="images/04_route_02.png" alt="image" style="width:auto;height:300px;">
+<img src="images/04_route_01.png" alt="image" style="width:auto;max-height:300px;">
+<img src="images/04_route_02.png" alt="image" style="width:auto;max-height:300px;">
 
 URL Path 각각의 세그먼트 기준으로 화면을 구성할 수 있다.
 
@@ -33,8 +33,8 @@ export default function Page() {
 
 대시보드에는 여러 페이지에서 공유되는 일종의 탐색 기능이 있습니다. Next.js에서는 특수 layout.tsx파일을 사용하여 여러 페이지 간에 공유되는 UI를 만들 수 있습니다
 
-<img src="images/04_route_03.png" alt="image" style="width:auto;height:300px;">
-<img src="images/04_route_04.png" alt="image" style="width:auto;height:300px;">
+<img src="images/04_route_03.png" alt="image" style="width:auto;max-height:300px;">
+<img src="images/04_route_04.png" alt="image" style="width:auto;max-height:300px;">
 
 ## 참조 링크
 

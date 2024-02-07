@@ -12,16 +12,16 @@
 
 ```tsx
 // 맨 위에 추가
-import '../styles/globals.css'
+import '../styles/globals.css';
 ```
 
 ### 추가 전
 
-<img src="images/02_before.png" alt="image" style="width:auto;height:300px;">
+<img src="images/02_before.png" alt="image" style="width:auto;max-height:300px;">
 
 ### 추가 후
 
-<img src="images/02_after.png" alt="image" style="width:auto;height:300px;">
+<img src="images/02_after.png" alt="image" style="width:auto;max-height:300px;">
 
 ## tailwind
 
@@ -47,16 +47,14 @@ CSS 스타일은 전역적으로 공유되지만 각 클래스는 각 요소에 
   border-left: 20px solid transparent;
   border-right: 20px solid transparent;
 }
-
 ```
 
 ```tsx
-
 import styles from '@/app/ui/home.module.css';
 
 // 임포트.클래스명 형태로 사용 가능
 // 이렇게 사용하면 로컬에서 동작하여 클래스명이 겹치지 않는다.
-<div className={styles.shape} />
+<div className={styles.shape} />;
 ```
 
 위 내용은 컴파일 시 `<div class="home_shape__hPvH_"></div>` 와 같은 형태로 보여지게 된다
@@ -66,7 +64,7 @@ import styles from '@/app/ui/home.module.css';
 
 ```tsx
 import clsx from 'clsx';
- 
+
 export default function InvoiceStatus({ status }: { status: string }) {
   return (
     <span
