@@ -1,7 +1,7 @@
 {
   // see more : https://github.com/DavidAnson/vscode-markdownlint#configure
   "editor.codeActionsOnSave": {
-    "source.fixAll.markdownlint": true
+    "source.fixAll.markdownlint": "explicit"
   },
   "markdownlint.config": {
     "default": true,
