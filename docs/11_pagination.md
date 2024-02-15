@@ -108,6 +108,131 @@ export default function Search() {
 - 사용자가 검색창에 입력하면 params.toString()이 입력이 URL 친화적인 형식으로 변환됩니다.
 - Next.js의 클라이언트 측 탐색 덕분에 페이지를 다시 로드하지 않고도 URL이 업데이트됩니다
 
+## 3. URL과 입력의 동기화 유지
+
+입력 필드가 URL과 동기화되고 공유 시 채워지도록 하기위해 `defaultValue` 를 활용합니다
+
+```tsx
+<input
+  className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+  placeholder={placeholder}
+  onChange={(e) => {
+    handleSearch(e.target.value);
+  }}
+  defaultValue={searchParams.get('query')?.toString()}
+/>
+```
+
+## table 업데이트
+
+Page 구성요소는 prop을 허용하므로 `searchParams` 를 통해 현재 URL 매개변수를 구성요소에 전달할 수 있습니다. query 와 page 정보를 전달
+
+```tsx
+import Pagination from '@/app/ui/invoices/pagination';
+import Search from '@/app/ui/search';
+import Table from '@/app/ui/invoices/table';
+import { CreateInvoice } from '@/app/ui/invoices/buttons';
+import { lusitana } from '@/app/ui/fonts';
+import { Suspense } from 'react';
+import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}) {
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+
+  return (
+    <div className="w-full">
+      <div className="flex w-full items-center justify-between">
+        <h1 className={`${lusitana.className} text-2xl`}>Invoices</h1>
+      </div>
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search invoices..." />
+        <CreateInvoice />
+      </div>
+      <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+        <Table query={query} currentPage={currentPage} />
+      </Suspense>
+      <div className="mt-5 flex w-full justify-center">
+        {/* <Pagination totalPages={totalPages} /> */}
+      </div>
+    </div>
+  );
+}
+```
+
+## useSearchParams() 후크의 사용 시기
+
+일반적으로 클라이언트에서 매개변수를 읽으려면 useSearchParams()서버로 돌아갈 필요가 없도록 후크를 사용
+
+## 모범 사례: 디바운싱
+
+아래 코드를 수행 해보면 단어가 업데이트 될 때마다 함수를 호출 하는 것을 볼 수 있다. 이를 방지하기 위해 디바운싱 처리를 해야한다.
+
+```tsx
+function handleSearch(term: string) {
+  console.log(`Searching... ${term}`);
+
+  const params = new URLSearchParams(searchParams);
+  if (term) {
+    params.set('query', term);
+  } else {
+    params.delete('query');
+  }
+  replace(`${pathname}?${params.toString()}`);
+}
+```
+
+디바운싱 작동 방식:
+
+- Trigger Event : 디바운싱되어야 하는 이벤트(검색창의 키 입력 등)가 발생하면 타이머가 시작됩니다.
+- 대기 : 타이머가 만료되기 전에 새로운 이벤트가 발생하면 타이머가 재설정됩니다.
+- 실행 : 타이머가 카운트다운 끝에 도달하면 디바운싱된 함수가 실행됩니다.
+
+## debounce 적용하기
+
+```bash
+npm i use-debounce
+```
+
+useDebouncedCallback 후크를 사용하여 디바운싱된 콜백을 만들 수 있습니다.
+디바운싱을 통해 데이터베이스로 전송되는 요청 수를 줄여 리소스를 절약할 수 있습니다.
+
+```tsx
+//=> app\ui\search.tsx
+// ...
+import { useDebouncedCallback } from 'use-debounce';
+
+// Inside the Search Component...
+const handleSearch = useDebouncedCallback((term) => {
+  console.log(`Searching... ${term}`);
+
+  const params = new URLSearchParams(searchParams);
+  if (term) {
+    params.set('query', term);
+  } else {
+    params.delete('query');
+  }
+  replace(`${pathname}?${params.toString()}`);
+}, 300);
+```
+
+## pagination 추가
+
+pagination 정보를 추가하여 반영하면 아래와 같은 화면을 볼 수 있다.
+
+<img src="images/11_page_01.png" alt="image" style="width:auto;max-height:300px;">
+
+```tsx
+
+```
+
 ## 참조링크
 
 - [use-router#userouter](https://nextjs.org/docs/app/api-reference/functions/use-router#userouter)
