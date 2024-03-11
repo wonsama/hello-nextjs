@@ -183,3 +183,31 @@ export async function createInvoice(formData: FormData) {
 5. 데이터베이스의 송장 데이터를 업데이트하십시오.
 
 <img src="images/12_mutating_02.png" alt="image" style="width:auto;max-height:300px;">
+
+```txt
+UUID와 자동 증가 키 비교
+
+당사는 키(예: 1, 2, 3 등)를 증가시키는 대신 UUID를 사용합니다. 이로 인해 URL이 길어지지만, UUID는 ID 충돌의 위험을 없애고 전 세계적으로 고유하며 열거 공격의 위험을 줄여 대규모 데이터베이스에 이상적입니다.
+
+그러나 보다 깔끔한 URL을 선호한다면 자동 증가 키를 사용하는 것이 좋습니다.
+```
+
+## 4. 서버 엑션에 id 값 전달
+
+마지막으로 데이터베이스에서 올바른 레코드를 업데이트할 수 있도록 서버 액션에 ID를 전달하려고 합니다. 이렇게 ID를 인자로 전달할 수는 없습니다:
+
+```tsx
+// ID를 인수로 전달하면 작동하지 않습니다.
+<form action={updateInvoice(id)}>
+```
+
+```tsx
+// 대신 JS 바인딩을 사용하여 서버 액션에 아이디를 전달할 수 있습니다. 이렇게 하면 서버 액션에 전달된 모든 값이 인코딩됩니다.
+const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
+<form action={updateInvoiceWithId}>
+```
+
+## 참조
+
+- edit 후 다시 수정 화면 들어가면 이전 캐싱된 값이 남는 현상이 발생 ( revalidatePath ) 사용 부분 재확인 필요
