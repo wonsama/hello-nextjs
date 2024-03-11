@@ -1,14 +1,16 @@
 'use client';
 
-import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
+
 import { Button } from '@/app/ui/button';
+import Link from 'next/link';
+import { updateInvoice } from '@/app/lib/actions';
 
 export default function EditInvoiceForm({
   invoice,
@@ -17,8 +19,15 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
+  // 주의 : ID를 인수로 전달하면 작동하지 않습니다.
+  // <form action={updateInvoice(id)}>
+
   return (
-    <form>
+    // 대신 JS 바인딩을 사용하여 서버 액션에 아이디를 전달할 수 있습니다.
+    // 이렇게 하면 서버 액션에 전달된 모든 값이 인코딩됩니다.
+    <form action={updateInvoiceWithId}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
